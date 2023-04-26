@@ -26,8 +26,8 @@ const addBookHandler = (e) => {
     const formData = new FormData(bookForm);
     const fromEntries = Object.fromEntries(formData);
 
-    addBookToLibrary(new Book(fromEntries.title, fromEntries.author, fromEntries.pages, !!fromEntries?.isRead))
-
+    addBookToLibrary(new Book(fromEntries.title, fromEntries.author, fromEntries.pages, !!fromEntries?.isRead));
+    bookForm.reset();
     renderBooks(myLibrary)
 }
 
