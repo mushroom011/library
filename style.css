@@ -129,6 +129,27 @@ tr:nth-child(odd) {
 }
 
 @media(max-width: 650px) {
+  form {
+    display: block;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .group {
+    margin-bottom: 10px;
+  }
+
+  .checkbox {
+    text-align: left;
+    flex-direction: row;
+  }
+
+  .checkbox-text {
+    padding-right: 10px;
+  }
+
   th {
     display: none;
   }
@@ -145,6 +166,7 @@ tr:nth-child(odd) {
 
   td:last-child {
     padding-bottom: 1.5rem;
+    display: block;
   }
 
   td:nth-child(1):before {
@@ -160,11 +182,7 @@ tr:nth-child(odd) {
   }
 
   td:nth-child(4):before {
-    content: 'is read';
-  }
-
-  td:nth-child(5):before {
-    content: 'delete';
+    content: 'Status';
   }
 }
 
