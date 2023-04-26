@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <main class="main">
+      <div class="header">
+        <h2>My Library</h2>
+      </div>
+      <form id="bookForm">
+        <div class="group">
+          <label for="title">Title</label>
+          <input id="title" name="title" type="text">
+        </div>
+        <div class="group">
+          <label for="author">Author</label>
+          <input id="author" name="author" type="text">
+        </div>
+        <div class="group">
+          <label for="pages">Pages</label>
+          <input id="pages" name="pages" type="number" min="1">
+        </div>
+        <label class="group checkbox" for="isRead">
+          <span>Have you read it?</span>
+          <input id="isRead" name="isRead" type="checkbox">
+          <span></span>
+        </label>
+        <button id="addBook" class="btn">Add A New Book</button>
+      </form>
+
+      <table>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Pages</th>
+          <th>Status</th>
+          <th>Delete</th>
+        </tr>
+        <tbody id="booksContainer"></tbody>
+      </table>
+    </main>
+    <div class="footer">
+      Copyright © Mushroom011
+    </div>
+  </body>
+</html>
