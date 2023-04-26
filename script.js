@@ -31,8 +31,8 @@ const addBookHandler = (e) => {
     renderBooks(myLibrary)
 }
 
-const addBookBtn = document.querySelector('#addBook');
-addBookBtn.addEventListener('click', addBookHandler);
+const bookForm = document.querySelector('#bookForm');
+bookForm.addEventListener('submit', addBookHandler);
 
 const deleteBook = (bookId) => {
     myLibrary = myLibrary.filter(book => book.id !== bookId);
