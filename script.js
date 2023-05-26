@@ -1,24 +1,46 @@
-let myLibrary = [
-    {id: 1, title: 'Duma Key', author: 'Stephen King', pages: 607, isRead: true},
-    {id: 2, title: 'Harry Potter and the Deathly Hallows', author: 'J. K. Rowling', pages: 607, isRead: true},
-    {id: 3, title: 'Revival', author: 'Stephen King', pages: 403, isRead: false},
-    {id: 4, title: 'A Game of Thrones', author: 'George R. R. Martin', pages: 694, isRead: true},
-    {id: 5, title: 'Harry Potter and the Half-Blood Prince', author: 'J. K. Rowling', pages: 607, isRead: true}
+class Library {
+    constructor(books) {
+        this.books = books;
+    }
+
+    addBook = (newBook) => this.books.push(newBook);
+
+    deleteBook = (bookId) => {
+        this.books = this.books.filter(book => book.id !== bookId);
+    }
+
+    getBooks() {
+        return this.books;
+    }
+
+    getBookById = (id) => {
+        return this.getBooks().find(book => book.id === id);
+    }
+}
+
+class Book {
+    constructor(title, author, pages, isRead = false){
+        this.id = Math.floor(Math.random() * 1000) + '_' + title + '_' + author;
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.isRead = isRead;
+    }
+
+    toggleIsRead() {
+        this.isRead = !this.isRead;
+    }
+}
+
+let books = [
+    new Book('Duma Key', 'Stephen King', 607, true),
+    new Book('Harry Potter and the Deathly Hallows', 'J. K. Rowling', 607, true),
+    new Book('Revival', 'Stephen King', 403, false),
+    new Book('A Game of Thrones', 'George R. R. Martin', 694, true),
+    new Book('Harry Potter and the Half-Blood Prince', 'J. K. Rowling', 607, true),
 ];
 
-function Book(title, author, pages, isRead = false) {
-    this.id = Math.floor(Math.random() * 1000) + '_' + title + '_' + author;
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.isRead = isRead;
-}
-
-Book.prototype.toggleIsRead = function () {
-    this.isRead = !this.isRead;
-}
-
-const addBookToLibrary = (newBook) => myLibrary.push(newBook);
+const myLibrary = new Library(books);
 
 const addBookHandler = (e) => {
     e.preventDefault();
@@ -26,18 +48,14 @@ const addBookHandler = (e) => {
     const formData = new FormData(bookForm);
     const fromEntries = Object.fromEntries(formData);
 
-    addBookToLibrary(new Book(fromEntries.title, fromEntries.author, fromEntries.pages, !!fromEntries?.isRead));
+    myLibrary.addBook(new Book(fromEntries.title, fromEntries.author, fromEntries.pages, !!fromEntries?.isRead));
     bookForm.reset();
-    renderBooks(myLibrary)
+    renderBooks(myLibrary.getBooks())
 }
 
 const bookForm = document.querySelector('#bookForm');
 bookForm.addEventListener('submit', addBookHandler);
 
-const deleteBook = (bookId) => {
-    myLibrary = myLibrary.filter(book => book.id !== bookId);
-    renderBooks(myLibrary);
-}
 
 const createTdWithText = (text) => {
     const bookTd = document.createElement('td');
@@ -45,14 +63,27 @@ const createTdWithText = (text) => {
     return bookTd;
 }
 
-const createTdWithCheckbox = (isRead) => {
+const createTdWithCheckbox = ({id, isRead}) => {
     const td = document.createElement('td');
-    const checked = isRead ? 'checked' : null;
+    const label = document.createElement('label');
+    const input = document.createElement('input');
+    const span = document.createElement('span');
 
-    td.innerHTML = `<label class="checkbox">
-        <input name="isRead" type="checkbox" ${checked}>
-            <span></span>
-    </label>`;
+    const isReadClickHandler = () => {
+        myLibrary.getBookById(id).toggleIsRead()
+    }
+
+    if(isRead) {
+        input.setAttribute('checked', isRead);
+    }
+
+    input.setAttribute('name','isRead');
+    input.setAttribute('type','checkbox');
+    input.addEventListener('click', isReadClickHandler)
+    label.classList.add('checkbox');
+    label.appendChild(input);
+    label.appendChild(span);
+    td.appendChild(label)
 
     return td;
 }
@@ -62,7 +93,10 @@ const createBookTdWithDeleteBtn = (bookId) => {
     const bookDeleteButton = document.createElement('button');
     bookDeleteButton.setAttribute('class', 'btn')
     bookDeleteButton.textContent = 'delete';
-    bookDeleteButton.addEventListener('click', () => deleteBook(bookId))
+    bookDeleteButton.addEventListener('click', () => {
+        myLibrary.deleteBook(bookId);
+        renderBooks(myLibrary.getBooks());
+    })
     bookDeleteTd.appendChild(bookDeleteButton);
     return bookDeleteTd;
 }
@@ -74,7 +108,7 @@ const createBookNode = (book) => {
     for(let prop in book) {
         if(prop === 'id') continue;
         if(prop === 'isRead'){
-            tds.push(createTdWithCheckbox(book.isRead));
+            tds.push(createTdWithCheckbox(book));
         } else if(book.hasOwnProperty(prop)){
             tds.push(createTdWithText(book[prop]));
         }
@@ -89,7 +123,7 @@ const createBookNode = (book) => {
 
 const renderBooks = (booksList) => {
     const booksNods = [];
-    for (let i = booksList.length - 1; i > 0; i--) {
+    for (let i = booksList.length - 1; i >= 0; i--) {
         booksNods.push(createBookNode(booksList[i]));
     }
 
@@ -97,4 +131,4 @@ const renderBooks = (booksList) => {
     booksContainer.replaceChildren(...booksNods);
 }
 
-renderBooks(myLibrary);
+renderBooks(myLibrary.getBooks());
